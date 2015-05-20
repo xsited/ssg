@@ -1,0 +1,28 @@
+[stack@wp-00 ~]$ cat config
+#Management interface
+MNT_IF=pxe0
+MNT_IP=192.168.10.111
+
+#Tenant interface
+TENAT_IF=ens2f0
+
+#Public interface
+PUBLIC_INTERFACE=ens2f1
+
+[root@wp-01 stack]# cat config 
+#Controller node information
+CONTROLLER_IP=192.168.10.111
+
+
+#Compute node information
+#Management interface
+MNT_IF=pxe0
+MNT_IP=192.168.10.113
+
+#Tenant interface
+TENAT_IF=ens2f0
+
+[root@wp-01 stack]# exit
+logout
+Connection to 192.168.10.113 closed.
+
