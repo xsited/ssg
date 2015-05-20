@@ -1,0 +1,46 @@
+scp controller.sh config README update_deployment_config.sh local.conf stack@192.168.10.114:/home/stack
+vi controller.sh
+sudo su
+cd /usr/lib/python2.7/site-packages
+sudo rm -rf pip*
+cd -
+./update_deployment_config.sh
+./controller.sh
+curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+sudo python get-pip.py
+sudo rm -rf /usr/lib/python2.7/site-packages/pip*
+sudo python get-pip.py
+./controller.sh
+vi /opt/stack/requirements/global-requirements.txt
+yum -y install git python-pip python-pbr
+sudo yum -y install git python-pip python-pbr
+./controller.sh
+sudo yum clean all
+curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+sudo python get-pip.py
+./controller.sh
+sudo rm -rf /usr/lib/python2.7/site-packages/pip*
+./controller.sh
+pip --version
+sudo vi /opt/stack/requirements/global-requirements.txt
+./controller.sh
+sudo rm -rf /usr/lib/python2.7/site-packages/pip*
+sudo rm -rf /usr/lib/python2.7/site-packages/pip*
+./controller.sh
+which pip
+pip --version
+sudo vi /opt/stack/requirements/global-requirements.txt
+./controller.sh
+which pip
+pip -version
+pip --version
+sudo rm -rf /usr/lib/python2.7/site-packages/pip*
+./controller.sh
+sudo vi /opt/stack/requirements/global-requirements.txt
+sudo vi /usr/lib/python2.7/site-packages/pip/req/req_install.py
+sudo vi /opt/stack/requirements/update.py
+sudo vi /opt/stack/requirements/update.py
+sudo vi /opt/stack/requirements/global-requirements.txt
+sudo rm -rf /usr/lib/python2.7/site-packages/pbr*
+./controller.sh
+

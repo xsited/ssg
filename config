@@ -1,0 +1,9 @@
+#Management interface
+MNT_IF=pxe0
+MNT_IP=192.168.10.111
+
+#Tenant interface
+TENAT_IF=ens2f0
+
+#Public interface
+PUBLIC_INTERFACE=ens2f1
