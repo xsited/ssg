@@ -1,0 +1,61 @@
+[stack@wp-00 devstack]$ git log
+commit 3be5e02cf873289b814da87a0ea35c3dad21765b
+Author: Davanum Srinivas <davanum@gmail.com>
+Date:   Sat Jan 24 19:21:34 2015 -0500
+
+    Bump up the count of workers for heat
+    
+    Looks like the workers is set to 0 which in heat is used
+    mainly for profiling/debugging and not really useful in
+    the devstack scenarios.
+    https://github.com/openstack/heat/blob/master/heat/common/wsgi.py#L286
+    
+    Partial-Bug: #1412923
+    Change-Id: Iccf6aeffd461fdc1f78022cbda370be4b9573267
+
+commit ec0a60e6f0455c29c24b1fcd0f7f92132a4c1e95
+Merge: 5f26dcb 67d547c
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Sat Jan 17 08:25:30 2015 +0000
+
+    Merge "Poll resource tracker for ironic cpus as well as count" into stable/juno
+
+commit 5f26dcb21fc35646f2fc05bbae32d873377e7a40
+Merge: 752af80 b9cc446
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Fri Jan 16 06:18:10 2015 +0000
+
+    Merge "Compile Horizon message catalogs during stack.sh" into stable/juno
+
+commit 752af80e21edb53bfb41f7f4b553a09c18d427ad
+Merge: f001a89 a6a3142
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Fri Jan 16 00:22:52 2015 +0000
+
+    Merge "Move ironic ssh key creation early in preparation" into stable/juno
+
+commit b9cc446096074dfebb2f721cdbb87f4953f7e8d4
+Author: Tarun Jain <tarun.jain2@hp.com>
+Date:   Sun Jan 11 23:05:49 2015 -0800
+
+    Compile Horizon message catalogs during stack.sh
+    
+    Backporting patch from master to stable/juno branch
+    https://review.openstack.org/#/c/128601/
+    
+    Change-Id: I7f61e80bd7f26a7d99474618f773a737afcfbef3
+    Closes-Bug: 1409587
+[stack@wp-00 devstack]$ cat .git/config 
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://github.com/openstack-dev/devstack.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[stack@wp-00 devstack]$ 
+`
