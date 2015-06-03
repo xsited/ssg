@@ -670,6 +670,7 @@ make install T=x86_64-${feature}-linuxapp-gcc
 cd lib/librte_vhost/eventfd_link/
 make
 cd ${home}/src/ovs
+git checkout 7762f7c39a8f5f115427b598d9e768f9336af466
 
 pwd
 patch -p1 <../../dpdk-vhost-user-2.patch
