@@ -60,13 +60,13 @@ cat << 'EOF' > rc.local.include
 dmesg | grep -e DMAR -e IOMMU
 grep -i huge /proc/meminfo
 
-mount -t hugetlbfs -o pagesize=1G none /dev/hugepages
+# mount -t hugetlbfs -o pagesize=1G none /dev/hugepages
 
 # echo 1024 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
 # mkdir /mnt/huge
 # mount -t hugetlbfs nodev /mnt/huge
 
-modprobe uio 
+# modprobe uio 
 
 # DPDK_HOME=
 # insmod $(DPDK_HOME)/lib/librte_vhost/eventfd_link/eventfd_link.ko
@@ -78,13 +78,29 @@ modprobe uio
 # chmod a+x /dev/vfio
 # chmod 0666 /dev/vfio/*
 
-# modprobe uio
-# DPDK_HOME=
-# insmod $(DPDK_HOME)/lib/librte_vhost/eventfd_link/eventfd_link.ko
-# insmod $(DPDK_HOME)/x86_64-ivshmem-linuxapp-gcc/kmod/igb_uio.ko
-# mount -t hugetlbfs -o pagesize=1G none /dev/hugepages
-# killall ovs-vswitchd
-# ovs-vswitchd --dpdk -c 0x0FF8 -n 4 --socket-mem 1024,0 -- unix:/var/run/openvswitch/db.sock -vconsole:emer -vsyslog:err -vfile:info --mlockall --no-chdir --log-file=/var/log/openvswitch/ovs-vswitchd.log --pidfile=/var/run/openvswitch/ovs-vswitchd.pid --detach --monitor
+# Change DPDK_HOME to suite
+DPDK_HOME=
+modprobe uio
+insmod $(DPDK_HOME)/lib/librte_vhost/eventfd_link/eventfd_link.ko
+insmod $(DPDK_HOME)/x86_64-ivshmem-linuxapp-gcc/kmod/igb_uio.ko
+
+mount -t hugetlbfs -o pagesize=1G none /dev/hugepages
+
+$(DPDK_HOME)/tools/dpdk_nic_bind.py --bind=igb_uio p514p1
+$(DPDK_HOME)/tools/dpdk_nic_bind.py --bind=igb_uio p514p2
+$(DPDK_HOME)/tools/dpdk_nic_bind.py --status
+
+
+killall ovs-vswitchd
+ovs-vswitchd --dpdk -c 0x0FF8 -n 4 --socket-mem 1024,0 -- unix:/var/run/openvswitch/db.sock -vconsole:emer -vsyslog:err -vfile:info --mlockall --no-chdir --log-file=/var/log/openvswitch/ovs-vswitchd.log --pidfile=/var/run/openvswitch/ovs-vswitchd.pid --detach --monitor
+killall ovs-vswitchd
+ovs-vswitchd --dpdk -c 0x0FF8 -n 4 --socket-mem 1024,0 -- unix:/var/run/openvswitch/db.sock -vconsole:emer -vsyslog:err -vfile:info --mlockall --no-chdir --log-file=/var/log/openvswitch/ovs-vswitchd.log --pidfile=/var/run/openvswitch/ovs-vswitchd.pid --detach --monitor
+
+ovs-vsctl add-br br0 -- set bridge br0 datapath_type=netdev
+ovs-vsctl add-port br0 dpdk0 -- set Interface dpdk0 type=dpdk
+ovs-vsctl add-port br0 dpdk1 -- set Interface dpdk1 type=dpdk
+
+ovs-vsctl show
 
 EOF
 
@@ -783,3 +799,5 @@ make
 #                or
 # rpmbuild -bb rhel/openvswitch-fedora.spec
 
+cd ${home}
+echo "Done. Next cat rc.local.include"
