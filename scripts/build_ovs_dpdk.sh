@@ -743,7 +743,20 @@ mkdir -p src
 cd src
 wget http://dpdk.org/browse/dpdk/snapshot/dpdk-${dversion}.tar.gz
 tar xvzpf dpdk-${dversion}.tar.gz
-git clone https://github.com/openvswitch/ovs.git
+
+
+wget -q http://openvswitch.org/releases/openvswitch-2.4.0.tar.gz
+if [ $? -ne 0 ]
+  then 
+	echo "Open vSwitch v2.4 is not there"
+	git clone https://github.com/openvswitch/ovs.git
+	ovs_path="ovs"
+  else 
+	echo "OK"
+	tar xzpf openvswitch-2.4.0.tar.gz
+	ovs_path="openvswitch-2.4.0.tar.gz"
+fi
+
 cd dpdk-${dversion}/
 patch -p0 <../../config.${dversion}.patch
 
@@ -751,18 +764,22 @@ make config T=x86_64-${feature}-linuxapp-gcc
 make install T=x86_64-${feature}-linuxapp-gcc
 cd lib/librte_vhost/eventfd_link/
 make
-cd ${home}/src/ovs
+
+cd ${home}/src/${ovs_path}
 
 git checkout 7762f7c39a8f5f115427b598d9e768f9336af466
 
-#pwd
 patch -p1 <../../dpdk-vhost-user-2.patch
 patch -p1 <../../ovs-ctl-add-dpdk.patch
+
+
 ./boot.sh
 ./configure --prefix=/usr  --sysconfdir=/etc --localstatedir=/var --with-dpdk=../dpdk-${dversion}/x86_64-${feature}-linuxapp-gcc/ --enable-ssl
 
 make
+# make install
 #                or
 # dpkg-buildpackage -b
-# mv ../../*.deb ../../ovs-debian
+#                or
+# rpmbuild -bb rhel/openvswitch-fedora.spec
 

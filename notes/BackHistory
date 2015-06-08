@@ -1,0 +1,498 @@
+    1  su
+    2  sudo tail -f /var/log/httpd/keystone.log & echo $! >/opt/stack/status/stack/key.pid; fg || echo "key failed to start" | tee "/opt/stack/status/stack/key.failure"
+    3  sudo tail -f /var/log/httpd/keystone_access.log & echo $! >/opt/stack/status/stack/key-access.pid; fg || echo "key-access failed to start" | tee "/opt/stack/status/stack/key-access.failure"
+    4  /opt/stack/heat/bin/heat-engine --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-eng.pid; fg || echo "h-eng failed to start" | tee "/opt/stack/status/stack/h-eng.failure"
+    5  /opt/stack/heat/bin/heat-api --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api.pid; fg || echo "h-api failed to start" | tee "/opt/stack/status/stack/h-api.failure"
+    6  /opt/stack/heat/bin/heat-api-cfn --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cfn.pid; fg || echo "h-api-cfn failed to start" | tee "/opt/stack/status/stack/h-api-cfn.failure"
+    7  /opt/stack/heat/bin/heat-api-cloudwatch --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cw.pid; fg || echo "h-api-cw failed to start" | tee "/opt/stack/status/stack/h-api-cw.failure"
+    8  /usr/bin/nova-api & echo $! >/opt/stack/status/stack/n-api.pid; fg || echo "n-api failed to start" | tee "/opt/stack/status/stack/n-api.failure"
+    9  /usr/bin/nova-cert --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-crt.pid; fg || echo "n-crt failed to start" | tee "/opt/stack/status/stack/n-crt.failure"
+   10  /usr/bin/nova-scheduler --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-sch.pid; fg || echo "n-sch failed to start" | tee "/opt/stack/status/stack/n-sch.failure"
+   11  /usr/bin/nova-novncproxy --config-file /etc/nova/nova.conf --web /opt/stack/noVNC & echo $! >/opt/stack/status/stack/n-novnc.pid; fg || echo "n-novnc failed to start" | tee "/opt/stack/status/stack/n-novnc.failure"
+   12  /usr/bin/nova-xvpvncproxy --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-xvnc.pid; fg || echo "n-xvnc failed to start" | tee "/opt/stack/status/stack/n-xvnc.failure"
+   13  /usr/bin/nova-consoleauth --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cauth.pid; fg || echo "n-cauth failed to start" | tee "/opt/stack/status/stack/n-cauth.failure"
+   14  /usr/bin/nova-conductor --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cond.pid; fg || echo "n-cond failed to start" | tee "/opt/stack/status/stack/n-cond.failure"
+   15  /usr/bin/nova-objectstore --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-obj.pid; fg || echo "n-obj failed to start" | tee "/opt/stack/status/stack/n-obj.failure"
+   16  /usr/bin/glance-api --config-file=/etc/glance/glance-api.conf & echo $! >/opt/stack/status/stack/g-api.pid; fg || echo "g-api failed to start" | tee "/opt/stack/status/stack/g-api.failure"
+   17  /usr/bin/glance-registry --config-file=/etc/glance/glance-registry.conf & echo $! >/opt/stack/status/stack/g-reg.pid; fg || echo "g-reg failed to start" | tee "/opt/stack/status/stack/g-reg.failure"
+   18  sudo tail -f /var/log/httpd/keystone.log & echo $! >/opt/stack/status/stack/key.pid; fg || echo "key failed to start" | tee "/opt/stack/status/stack/key.failure"
+   19  /opt/stack/cinder/bin/cinder-api --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-api.pid; fg || echo "c-api failed to start" | tee "/opt/stack/status/stack/c-api.failure"
+   20  /opt/stack/cinder/bin/cinder-scheduler --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-sch.pid; fg || echo "c-sch failed to start" | tee "/opt/stack/status/stack/c-sch.failure"
+   21  /opt/stack/cinder/bin/cinder-volume --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-vol.pid; fg || echo "c-vol failed to start" | tee "/opt/stack/status/stack/c-vol.failure"
+   22  python /usr/bin/neutron-metadata-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/metadata_agent.ini & echo $! >/opt/stack/status/stack/q-meta.pid; fg || echo "q-meta failed to start" | tee "/opt/stack/status/stack/q-meta.failure"
+   23  python /usr/bin/neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/dhcp_agent.ini & echo $! >/opt/stack/status/stack/q-dhcp.pid; fg || echo "q-dhcp failed to start" | tee "/opt/stack/status/stack/q-dhcp.failure"
+   24  python /usr/bin/neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/l3_agent.ini & echo $! >/opt/stack/status/stack/q-l3.pid; fg || echo "q-l3 failed to start" | tee "/opt/stack/status/stack/q-l3.failure"
+   25  python /usr/bin/neutron-openvswitch-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-agt.pid; fg || echo "q-agt failed to start" | tee "/opt/stack/status/stack/q-agt.failure"
+   26  python /usr/bin/neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-svc.pid; fg || echo "q-svc failed to start" | tee "/opt/stack/status/stack/q-svc.failure"
+   27  sudo tail -f /var/log/httpd/horizon_error.log & echo $! >/opt/stack/status/stack/horizon.pid; fg || echo "horizon failed to start" | tee "/opt/stack/status/stack/horizon.failure"
+   28  /opt/stack/heat/bin/heat-engine --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-eng.pid; fg || echo "h-eng failed to start" | tee "/opt/stack/status/stack/h-eng.failure"
+   29  /opt/stack/heat/bin/heat-api --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api.pid; fg || echo "h-api failed to start" | tee "/opt/stack/status/stack/h-api.failure"
+   30  /opt/stack/heat/bin/heat-api-cfn --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cfn.pid; fg || echo "h-api-cfn failed to start" | tee "/opt/stack/status/stack/h-api-cfn.failure"
+   31  /opt/stack/heat/bin/heat-api-cloudwatch --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cw.pid; fg || echo "h-api-cw failed to start" | tee "/opt/stack/status/stack/h-api-cw.failure"
+   32  /usr/bin/nova-api & echo $! >/opt/stack/status/stack/n-api.pid; fg || echo "n-api failed to start" | tee "/opt/stack/status/stack/n-api.failure"
+   33  /usr/bin/nova-cert --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-crt.pid; fg || echo "n-crt failed to start" | tee "/opt/stack/status/stack/n-crt.failure"
+   34  /usr/bin/nova-scheduler --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-sch.pid; fg || echo "n-sch failed to start" | tee "/opt/stack/status/stack/n-sch.failure"
+   35  /usr/bin/nova-novncproxy --config-file /etc/nova/nova.conf --web /opt/stack/noVNC & echo $! >/opt/stack/status/stack/n-novnc.pid; fg || echo "n-novnc failed to start" | tee "/opt/stack/status/stack/n-novnc.failure"
+   36  /usr/bin/nova-xvpvncproxy --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-xvnc.pid; fg || echo "n-xvnc failed to start" | tee "/opt/stack/status/stack/n-xvnc.failure"
+   37  /usr/bin/nova-consoleauth --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cauth.pid; fg || echo "n-cauth failed to start" | tee "/opt/stack/status/stack/n-cauth.failure"
+   38  /usr/bin/nova-conductor --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cond.pid; fg || echo "n-cond failed to start" | tee "/opt/stack/status/stack/n-cond.failure"
+   39  /usr/bin/nova-objectstore --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-obj.pid; fg || echo "n-obj failed to start" | tee "/opt/stack/status/stack/n-obj.failure"
+   40  /usr/bin/glance-api --config-file=/etc/glance/glance-api.conf & echo $! >/opt/stack/status/stack/g-api.pid; fg || echo "g-api failed to start" | tee "/opt/stack/status/stack/g-api.failure"
+   41  /usr/bin/glance-registry --config-file=/etc/glance/glance-registry.conf & echo $! >/opt/stack/status/stack/g-reg.pid; fg || echo "g-reg failed to start" | tee "/opt/stack/status/stack/g-reg.failure"
+   42  sudo tail -f /var/log/httpd/keystone.log & echo $! >/opt/stack/status/stack/key.pid; fg || echo "key failed to start" | tee "/opt/stack/status/stack/key.failure"
+   43  /opt/stack/cinder/bin/cinder-api --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-api.pid; fg || echo "c-api failed to start" | tee "/opt/stack/status/stack/c-api.failure"
+   44  /opt/stack/cinder/bin/cinder-scheduler --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-sch.pid; fg || echo "c-sch failed to start" | tee "/opt/stack/status/stack/c-sch.failure"
+   45  /opt/stack/cinder/bin/cinder-volume --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-vol.pid; fg || echo "c-vol failed to start" | tee "/opt/stack/status/stack/c-vol.failure"
+   46  python /usr/bin/neutron-metadata-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/metadata_agent.ini & echo $! >/opt/stack/status/stack/q-meta.pid; fg || echo "q-meta failed to start" | tee "/opt/stack/status/stack/q-meta.failure"
+   47  python /usr/bin/neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/dhcp_agent.ini & echo $! >/opt/stack/status/stack/q-dhcp.pid; fg || echo "q-dhcp failed to start" | tee "/opt/stack/status/stack/q-dhcp.failure"
+   48  python /usr/bin/neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/l3_agent.ini & echo $! >/opt/stack/status/stack/q-l3.pid; fg || echo "q-l3 failed to start" | tee "/opt/stack/status/stack/q-l3.failure"
+   49  python /usr/bin/neutron-openvswitch-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-agt.pid; fg || echo "q-agt failed to start" | tee "/opt/stack/status/stack/q-agt.failure"
+   50  python /usr/bin/neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-svc.pid; fg || echo "q-svc failed to start" | tee "/opt/stack/status/stack/q-svc.failure"
+   51  sudo tail -f /var/log/httpd/keystone_access.log & echo $! >/opt/stack/status/stack/key-access.pid; fg || echo "key-access failed to start" | tee "/opt/stack/status/stack/key-access.failure"
+   52  /opt/stack/heat/bin/heat-engine --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-eng.pid; fg || echo "h-eng failed to start" | tee "/opt/stack/status/stack/h-eng.failure"
+   53  /opt/stack/heat/bin/heat-api --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api.pid; fg || echo "h-api failed to start" | tee "/opt/stack/status/stack/h-api.failure"
+   54  /opt/stack/heat/bin/heat-api-cfn --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cfn.pid; fg || echo "h-api-cfn failed to start" | tee "/opt/stack/status/stack/h-api-cfn.failure"
+   55  /opt/stack/heat/bin/heat-api-cloudwatch --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cw.pid; fg || echo "h-api-cw failed to start" | tee "/opt/stack/status/stack/h-api-cw.failure"
+   56  /usr/bin/nova-api & echo $! >/opt/stack/status/stack/n-api.pid; fg || echo "n-api failed to start" | tee "/opt/stack/status/stack/n-api.failure"
+   57  /usr/bin/nova-cert --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-crt.pid; fg || echo "n-crt failed to start" | tee "/opt/stack/status/stack/n-crt.failure"
+   58  /usr/bin/nova-scheduler --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-sch.pid; fg || echo "n-sch failed to start" | tee "/opt/stack/status/stack/n-sch.failure"
+   59  /usr/bin/nova-novncproxy --config-file /etc/nova/nova.conf --web /opt/stack/noVNC & echo $! >/opt/stack/status/stack/n-novnc.pid; fg || echo "n-novnc failed to start" | tee "/opt/stack/status/stack/n-novnc.failure"
+   60  /usr/bin/nova-xvpvncproxy --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-xvnc.pid; fg || echo "n-xvnc failed to start" | tee "/opt/stack/status/stack/n-xvnc.failure"
+   61  /usr/bin/nova-consoleauth --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cauth.pid; fg || echo "n-cauth failed to start" | tee "/opt/stack/status/stack/n-cauth.failure"
+   62  /usr/bin/nova-conductor --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cond.pid; fg || echo "n-cond failed to start" | tee "/opt/stack/status/stack/n-cond.failure"
+   63  /usr/bin/nova-objectstore --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-obj.pid; fg || echo "n-obj failed to start" | tee "/opt/stack/status/stack/n-obj.failure"
+   64  /usr/bin/glance-api --config-file=/etc/glance/glance-api.conf & echo $! >/opt/stack/status/stack/g-api.pid; fg || echo "g-api failed to start" | tee "/opt/stack/status/stack/g-api.failure"
+   65  /usr/bin/glance-registry --config-file=/etc/glance/glance-registry.conf & echo $! >/opt/stack/status/stack/g-reg.pid; fg || echo "g-reg failed to start" | tee "/opt/stack/status/stack/g-reg.failure"
+   66  sudo tail -f /var/log/httpd/keystone.log & echo $! >/opt/stack/status/stack/key.pid; fg || echo "key failed to start" | tee "/opt/stack/status/stack/key.failure"
+   67  /opt/stack/cinder/bin/cinder-api --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-api.pid; fg || echo "c-api failed to start" | tee "/opt/stack/status/stack/c-api.failure"
+   68  /opt/stack/cinder/bin/cinder-scheduler --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-sch.pid; fg || echo "c-sch failed to start" | tee "/opt/stack/status/stack/c-sch.failure"
+   69  /opt/stack/cinder/bin/cinder-volume --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-vol.pid; fg || echo "c-vol failed to start" | tee "/opt/stack/status/stack/c-vol.failure"
+   70  sudo tail -f /var/log/httpd/horizon_error.log & echo $! >/opt/stack/status/stack/horizon.pid; fg || echo "horizon failed to start" | tee "/opt/stack/status/stack/horizon.failure"
+   71  ls
+   72  ./prepare_stack.sh 
+   73  cd devstack/
+   74  ls
+   75  vi stack.sh 
+   76  vi stackrc
+   77  ./unstack.sh ; FORCE=yes ./stack.sh 
+   78  vi stack.sh 
+   79  ./unstack.sh ; FORCE=yes ./stack.sh 
+   80  ls
+   81  vi local.conf 
+   82  ls
+   83  cp local.conf ../local.conf.nova.neutron 
+   84  ./unstack.sh 
+   85  vi local.conf 
+   86  FORCE=yes ./stack.sh 
+   87  cd ..
+   88  ls
+   89  cd devstack/
+   90  ./unstack.sh 
+   91  ls
+   92  cp local.conf ../local.conf.no.net
+   93  cp ../local.conf.nova.neutron local.conf 
+   94  ls
+   95  ./unstack.sh 
+   96  screen -R S
+   97  ls
+   98  vi prepare_stack.sh 
+   99  ls
+  100  cd devstack/
+  101  ls
+  102  vi local.conf 
+  103  ifconfig
+  104  vi local.conf 
+  105  ls
+  106  vi local.conf 
+  107  ifconfig
+  108  cd ..
+  109  ls
+  110  mkdir refresh
+  111  vi onps_config
+  112  vi system.sh
+  113  vi prepare_stack.sh
+  114  ls
+  115  cd refresh/
+  116  vi prepare_stack.sh
+  117  chmod 777 *.sh
+  118  vi local.conf-controller
+  119  ls
+  120  cd ..
+  121  ls
+  122  rm -rf local.conf*
+  123  rm -rf patches/
+  124  rm -rf prepare_stack.sh 
+  125  ls
+  126  mv system.sh refresh/
+  127  ls
+  128  cd refresh/
+  129  ls
+  130  chmod 777 system.sh 
+  131  vi prepare_stack.sh 
+  132  vi onps_config
+  133  ls
+  134  cd ..
+  135  ls
+  136  rm -rf devstack/
+  137  ls
+  138  cd refresh/
+  139  ls
+  140  ./system.sh 
+  141  su
+  142  FORCE=yes ./stack.sh 
+  143  /opt/stack/heat/bin/heat-api-cloudwatch --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cw.pid; fg || echo "h-api-cw failed to start" | tee "/opt/stack/status/stack/h-api-cw.failure"
+  144  /opt/stack/cinder/bin/cinder-volume --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-vol.pid; fg || echo "c-vol failed to start" | tee "/opt/stack/status/stack/c-vol.failure"
+  145  /opt/stack/cinder/bin/cinder-scheduler --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-sch.pid; fg || echo "c-sch failed to start" | tee "/opt/stack/status/stack/c-sch.failure"
+  146  /opt/stack/cinder/bin/cinder-api --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-api.pid; fg || echo "c-api failed to start" | tee "/opt/stack/status/stack/c-api.failure"
+  147  /opt/stack/heat/bin/heat-api-cfn --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cfn.pid; fg || echo "h-api-cfn failed to start" | tee "/opt/stack/status/stack/h-api-cfn.failure"
+  148  /opt/stack/heat/bin/heat-api --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api.pid; fg || echo "h-api failed to start" | tee "/opt/stack/status/stack/h-api.failure"
+  149  /opt/stack/heat/bin/heat-engine --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-eng.pid; fg || echo "h-eng failed to start" | tee "/opt/stack/status/stack/h-eng.failure"
+  150  /usr/bin/nova-cert --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-crt.pid; fg || echo "n-crt failed to start" | tee "/opt/stack/status/stack/n-crt.failure"
+  151  /usr/bin/nova-conductor --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cond.pid; fg || echo "n-cond failed to start" | tee "/opt/stack/status/stack/n-cond.failure"
+  152  python /usr/bin/neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/l3_agent.ini & echo $! >/opt/stack/status/stack/q-l3.pid; fg || echo "q-l3 failed to start" | tee "/opt/stack/status/stack/q-l3.failure"
+  153  /usr/bin/nova-scheduler --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-sch.pid; fg || echo "n-sch failed to start" | tee "/opt/stack/status/stack/n-sch.failure"
+  154  /usr/bin/nova-api & echo $! >/opt/stack/status/stack/n-api.pid; fg || echo "n-api failed to start" | tee "/opt/stack/status/stack/n-api.failure"
+  155  /usr/bin/nova-consoleauth --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cauth.pid; fg || echo "n-cauth failed to start" | tee "/opt/stack/status/stack/n-cauth.failure"
+  156  /usr/bin/nova-novncproxy --config-file /etc/nova/nova.conf --web /opt/stack/noVNC & echo $! >/opt/stack/status/stack/n-novnc.pid; fg || echo "n-novnc failed to start" | tee "/opt/stack/status/stack/n-novnc.failure"
+  157  python /usr/bin/neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-svc.pid; fg || echo "q-svc failed to start" | tee "/opt/stack/status/stack/q-svc.failure"
+  158  sudo tail -f /var/log/httpd/keystone_access.log & echo $! >/opt/stack/status/stack/key-access.pid; fg || echo "key-access failed to start" | tee "/opt/stack/status/stack/key-access.failure"
+  159  sudo tail -f /var/log/httpd/keystone.log & echo $! >/opt/stack/status/stack/key.pid; fg || echo "key failed to start" | tee "/opt/stack/status/stack/key.failure"
+  160  python /usr/bin/neutron-metadata-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/metadata_agent.ini & echo $! >/opt/stack/status/stack/q-meta.pid; fg || echo "q-meta failed to start" | tee "/opt/stack/status/stack/q-meta.failure"
+  161  /usr/bin/nova-objectstore --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-obj.pid; fg || echo "n-obj failed to start" | tee "/opt/stack/status/stack/n-obj.failure"
+  162  /usr/bin/nova-xvpvncproxy --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-xvnc.pid; fg || echo "n-xvnc failed to start" | tee "/opt/stack/status/stack/n-xvnc.failure"
+  163  python /usr/bin/neutron-openvswitch-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-agt.pid; fg || echo "q-agt failed to start" | tee "/opt/stack/status/stack/q-agt.failure"
+  164  /usr/bin/glance-registry --config-file=/etc/glance/glance-registry.conf & echo $! >/opt/stack/status/stack/g-reg.pid; fg || echo "g-reg failed to start" | tee "/opt/stack/status/stack/g-reg.failure"
+  165  /usr/bin/glance-api --config-file=/etc/glance/glance-api.conf & echo $! >/opt/stack/status/stack/g-api.pid; fg || echo "g-api failed to start" | tee "/opt/stack/status/stack/g-api.failure"
+  166  python /usr/bin/neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/dhcp_agent.ini & echo $! >/opt/stack/status/stack/q-dhcp.pid; fg || echo "q-dhcp failed to start" | tee "/opt/stack/status/stack/q-dhcp.failure"
+  167  /opt/stack/heat/bin/heat-engine --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-eng.pid; fg || echo "h-eng failed to start" | tee "/opt/stack/status/stack/h-eng.failure"
+  168  /opt/stack/heat/bin/heat-api --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api.pid; fg || echo "h-api failed to start" | tee "/opt/stack/status/stack/h-api.failure"
+  169  /opt/stack/heat/bin/heat-api-cfn --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cfn.pid; fg || echo "h-api-cfn failed to start" | tee "/opt/stack/status/stack/h-api-cfn.failure"
+  170  /opt/stack/heat/bin/heat-api-cloudwatch --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cw.pid; fg || echo "h-api-cw failed to start" | tee "/opt/stack/status/stack/h-api-cw.failure"
+  171  /usr/bin/nova-api & echo $! >/opt/stack/status/stack/n-api.pid; fg || echo "n-api failed to start" | tee "/opt/stack/status/stack/n-api.failure"
+  172  /usr/bin/nova-cert --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-crt.pid; fg || echo "n-crt failed to start" | tee "/opt/stack/status/stack/n-crt.failure"
+  173  /usr/bin/nova-scheduler --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-sch.pid; fg || echo "n-sch failed to start" | tee "/opt/stack/status/stack/n-sch.failure"
+  174  /usr/bin/nova-novncproxy --config-file /etc/nova/nova.conf --web /opt/stack/noVNC & echo $! >/opt/stack/status/stack/n-novnc.pid; fg || echo "n-novnc failed to start" | tee "/opt/stack/status/stack/n-novnc.failure"
+  175  /usr/bin/nova-xvpvncproxy --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-xvnc.pid; fg || echo "n-xvnc failed to start" | tee "/opt/stack/status/stack/n-xvnc.failure"
+  176  /usr/bin/nova-consoleauth --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cauth.pid; fg || echo "n-cauth failed to start" | tee "/opt/stack/status/stack/n-cauth.failure"
+  177  /usr/bin/nova-conductor --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cond.pid; fg || echo "n-cond failed to start" | tee "/opt/stack/status/stack/n-cond.failure"
+  178  /usr/bin/nova-objectstore --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-obj.pid; fg || echo "n-obj failed to start" | tee "/opt/stack/status/stack/n-obj.failure"
+  179  /usr/bin/glance-api --config-file=/etc/glance/glance-api.conf & echo $! >/opt/stack/status/stack/g-api.pid; fg || echo "g-api failed to start" | tee "/opt/stack/status/stack/g-api.failure"
+  180  /usr/bin/glance-registry --config-file=/etc/glance/glance-registry.conf & echo $! >/opt/stack/status/stack/g-reg.pid; fg || echo "g-reg failed to start" | tee "/opt/stack/status/stack/g-reg.failure"
+  181  sudo tail -f /var/log/httpd/keystone.log & echo $! >/opt/stack/status/stack/key.pid; fg || echo "key failed to start" | tee "/opt/stack/status/stack/key.failure"
+  182  /usr/bin/cinder-api --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-api.pid; fg || echo "c-api failed to start" | tee "/opt/stack/status/stack/c-api.failure"
+  183  /usr/bin/cinder-scheduler --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-sch.pid; fg || echo "c-sch failed to start" | tee "/opt/stack/status/stack/c-sch.failure"
+  184  /usr/bin/cinder-volume --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-vol.pid; fg || echo "c-vol failed to start" | tee "/opt/stack/status/stack/c-vol.failure"
+  185  python /usr/bin/neutron-metadata-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/metadata_agent.ini & echo $! >/opt/stack/status/stack/q-meta.pid; fg || echo "q-meta failed to start" | tee "/opt/stack/status/stack/q-meta.failure"
+  186  python /usr/bin/neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/l3_agent.ini & echo $! >/opt/stack/status/stack/q-l3.pid; fg || echo "q-l3 failed to start" | tee "/opt/stack/status/stack/q-l3.failure"
+  187  python /usr/bin/neutron-openvswitch-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-agt.pid; fg || echo "q-agt failed to start" | tee "/opt/stack/status/stack/q-agt.failure"
+  188  python /usr/bin/neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-svc.pid; fg || echo "q-svc failed to start" | tee "/opt/stack/status/stack/q-svc.failure"
+  189  sudo tail -f /var/log/httpd/horizon_error.log & echo $! >/opt/stack/status/stack/horizon.pid; fg || echo "horizon failed to start" | tee "/opt/stack/status/stack/horizon.failure"
+  190  sudo tail -f /var/log/httpd/keystone_access.log & echo $! >/opt/stack/status/stack/key-access.pid; fg || echo "key-access failed to start" | tee "/opt/stack/status/stack/key-access.failure"
+  191  /opt/stack/heat/bin/heat-api-cloudwatch --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cw.pid; fg || echo "h-api-cw failed to start" | tee "/opt/stack/status/stack/h-api-cw.failure"
+  192  /opt/stack/heat/bin/heat-api-cfn --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cfn.pid; fg || echo "h-api-cfn failed to start" | tee "/opt/stack/status/stack/h-api-cfn.failure"
+  193  /opt/stack/heat/bin/heat-api --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api.pid; fg || echo "h-api failed to start" | tee "/opt/stack/status/stack/h-api.failure"
+  194  /opt/stack/heat/bin/heat-engine --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-eng.pid; fg || echo "h-eng failed to start" | tee "/opt/stack/status/stack/h-eng.failure"
+  195  /opt/stack/cinder/bin/cinder-scheduler --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-sch.pid; fg || echo "c-sch failed to start" | tee "/opt/stack/status/stack/c-sch.failure"
+  196  /opt/stack/cinder/bin/cinder-api --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-api.pid; fg || echo "c-api failed to start" | tee "/opt/stack/status/stack/c-api.failure"
+  197  /usr/bin/nova-consoleauth --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cauth.pid; fg || echo "n-cauth failed to start" | tee "/opt/stack/status/stack/n-cauth.failure"
+  198  /usr/bin/nova-novncproxy --config-file /etc/nova/nova.conf --web /opt/stack/noVNC & echo $! >/opt/stack/status/stack/n-novnc.pid; fg || echo "n-novnc failed to start" | tee "/opt/stack/status/stack/n-novnc.failure"
+  199  /usr/bin/nova-api & echo $! >/opt/stack/status/stack/n-api.pid; fg || echo "n-api failed to start" | tee "/opt/stack/status/stack/n-api.failure"
+  200  python /usr/bin/neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-svc.pid; fg || echo "q-svc failed to start" | tee "/opt/stack/status/stack/q-svc.failure"
+  201  /usr/bin/nova-xvpvncproxy --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-xvnc.pid; fg || echo "n-xvnc failed to start" | tee "/opt/stack/status/stack/n-xvnc.failure"
+  202  /opt/stack/cinder/bin/cinder-volume --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-vol.pid; fg || echo "c-vol failed to start" | tee "/opt/stack/status/stack/c-vol.failure"
+  203  python /usr/bin/neutron-metadata-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/metadata_agent.ini & echo $! >/opt/stack/status/stack/q-meta.pid; fg || echo "q-meta failed to start" | tee "/opt/stack/status/stack/q-meta.failure"
+  204  python /usr/bin/neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/dhcp_agent.ini & echo $! >/opt/stack/status/stack/q-dhcp.pid; fg || echo "q-dhcp failed to start" | tee "/opt/stack/status/stack/q-dhcp.failure"
+  205  /usr/bin/nova-conductor --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cond.pid; fg || echo "n-cond failed to start" | tee "/opt/stack/status/stack/n-cond.failure"
+  206  /usr/bin/nova-objectstore --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-obj.pid; fg || echo "n-obj failed to start" | tee "/opt/stack/status/stack/n-obj.failure"
+  207  sudo tail -f /var/log/httpd/horizon_error.log & echo $! >/opt/stack/status/stack/horizon.pid; fg || echo "horizon failed to start" | tee "/opt/stack/status/stack/horizon.failure"
+  208  /usr/bin/glance-api --config-file=/etc/glance/glance-api.conf & echo $! >/opt/stack/status/stack/g-api.pid; fg || echo "g-api failed to start" | tee "/opt/stack/status/stack/g-api.failure"
+  209  python /usr/bin/neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/l3_agent.ini & echo $! >/opt/stack/status/stack/q-l3.pid; fg || echo "q-l3 failed to start" | tee "/opt/stack/status/stack/q-l3.failure"
+  210  python /usr/bin/neutron-openvswitch-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-agt.pid; fg || echo "q-agt failed to start" | tee "/opt/stack/status/stack/q-agt.failure"
+  211  /usr/bin/nova-cert --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-crt.pid; fg || echo "n-crt failed to start" | tee "/opt/stack/status/stack/n-crt.failure"
+  212  cd devstack/
+  213  FORCE=yes ./stack.sh
+  214  ifconfig
+  215  ls
+  216  clear
+  217  ls
+  218  /opt/stack/heat/bin/heat-api-cloudwatch --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cw.pid; fg || echo "h-api-cw failed to start" | tee "/opt/stack/status/stack/h-api-cw.failure"
+  219  /opt/stack/heat/bin/heat-api-cfn --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cfn.pid; fg || echo "h-api-cfn failed to start" | tee "/opt/stack/status/stack/h-api-cfn.failure"
+  220  /usr/bin/nova-objectstore --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-obj.pid; fg || echo "n-obj failed to start" | tee "/opt/stack/status/stack/n-obj.failure"
+  221  /usr/bin/nova-novncproxy --config-file /etc/nova/nova.conf --web /opt/stack/noVNC & echo $! >/opt/stack/status/stack/n-novnc.pid; fg || echo "n-novnc failed to start" | tee "/opt/stack/status/stack/n-novnc.failure"
+  222  python /usr/bin/neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/dhcp_agent.ini & echo $! >/opt/stack/status/stack/q-dhcp.pid; fg || echo "q-dhcp failed to start" | tee "/opt/stack/status/stack/q-dhcp.failure"
+  223  python /usr/bin/neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/l3_agent.ini & echo $! >/opt/stack/status/stack/q-l3.pid; fg || echo "q-l3 failed to start" | tee "/opt/stack/status/stack/q-l3.failure"
+  224  python /usr/bin/neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-svc.pid; fg || echo "q-svc failed to start" | tee "/opt/stack/status/stack/q-svc.failure"
+  225  /usr/bin/nova-xvpvncproxy --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-xvnc.pid; fg || echo "n-xvnc failed to start" | tee "/opt/stack/status/stack/n-xvnc.failure"
+  226  /usr/bin/nova-scheduler --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-sch.pid; fg || echo "n-sch failed to start" | tee "/opt/stack/status/stack/n-sch.failure"
+  227  python /usr/bin/neutron-metadata-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/metadata_agent.ini & echo $! >/opt/stack/status/stack/q-meta.pid; fg || echo "q-meta failed to start" | tee "/opt/stack/status/stack/q-meta.failure"
+  228  sudo tail -f /var/log/httpd/horizon_error.log & echo $! >/opt/stack/status/stack/horizon.pid; fg || echo "horizon failed to start" | tee "/opt/stack/status/stack/horizon.failure"
+  229  /usr/bin/nova-api & echo $! >/opt/stack/status/stack/n-api.pid; fg || echo "n-api failed to start" | tee "/opt/stack/status/stack/n-api.failure"
+  230  sudo tail -f /var/log/httpd/keystone_access.log & echo $! >/opt/stack/status/stack/key-access.pid; fg || echo "key-access failed to start" | tee "/opt/stack/status/stack/key-access.failure"
+  231  ls
+  232  vi local.conf 
+  233  cat config 
+  234  vi update_deployment_config.sh
+  235  /opt/stack/heat/bin/heat-engine --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-eng.pid; fg || echo "h-eng failed to start" | tee "/opt/stack/status/stack/h-eng.failure"
+  236  /opt/stack/heat/bin/heat-api --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api.pid; fg || echo "h-api failed to start" | tee "/opt/stack/status/stack/h-api.failure"
+  237  /opt/stack/heat/bin/heat-api-cfn --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cfn.pid; fg || echo "h-api-cfn failed to start" | tee "/opt/stack/status/stack/h-api-cfn.failure"
+  238  /opt/stack/heat/bin/heat-api-cloudwatch --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cw.pid; fg || echo "h-api-cw failed to start" | tee "/opt/stack/status/stack/h-api-cw.failure"
+  239  /usr/bin/nova-api & echo $! >/opt/stack/status/stack/n-api.pid; fg || echo "n-api failed to start" | tee "/opt/stack/status/stack/n-api.failure"
+  240  /usr/bin/nova-cert --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-crt.pid; fg || echo "n-crt failed to start" | tee "/opt/stack/status/stack/n-crt.failure"
+  241  /usr/bin/nova-scheduler --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-sch.pid; fg || echo "n-sch failed to start" | tee "/opt/stack/status/stack/n-sch.failure"
+  242  /usr/bin/nova-novncproxy --config-file /etc/nova/nova.conf --web /opt/stack/noVNC & echo $! >/opt/stack/status/stack/n-novnc.pid; fg || echo "n-novnc failed to start" | tee "/opt/stack/status/stack/n-novnc.failure"
+  243  /usr/bin/nova-xvpvncproxy --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-xvnc.pid; fg || echo "n-xvnc failed to start" | tee "/opt/stack/status/stack/n-xvnc.failure"
+  244  /usr/bin/nova-consoleauth --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cauth.pid; fg || echo "n-cauth failed to start" | tee "/opt/stack/status/stack/n-cauth.failure"
+  245  /usr/bin/nova-conductor --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cond.pid; fg || echo "n-cond failed to start" | tee "/opt/stack/status/stack/n-cond.failure"
+  246  /usr/bin/nova-objectstore --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-obj.pid; fg || echo "n-obj failed to start" | tee "/opt/stack/status/stack/n-obj.failure"
+  247  /usr/bin/glance-api --config-file=/etc/glance/glance-api.conf & echo $! >/opt/stack/status/stack/g-api.pid; fg || echo "g-api failed to start" | tee "/opt/stack/status/stack/g-api.failure"
+  248  /usr/bin/glance-registry --config-file=/etc/glance/glance-registry.conf & echo $! >/opt/stack/status/stack/g-reg.pid; fg || echo "g-reg failed to start" | tee "/opt/stack/status/stack/g-reg.failure"
+  249  sudo tail -f /var/log/httpd/keystone.log & echo $! >/opt/stack/status/stack/key.pid; fg || echo "key failed to start" | tee "/opt/stack/status/stack/key.failure"
+  250  /opt/stack/cinder/bin/cinder-api --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-api.pid; fg || echo "c-api failed to start" | tee "/opt/stack/status/stack/c-api.failure"
+  251  /opt/stack/cinder/bin/cinder-scheduler --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-sch.pid; fg || echo "c-sch failed to start" | tee "/opt/stack/status/stack/c-sch.failure"
+  252  /opt/stack/cinder/bin/cinder-volume --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-vol.pid; fg || echo "c-vol failed to start" | tee "/opt/stack/status/stack/c-vol.failure"
+  253  python /usr/bin/neutron-metadata-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/metadata_agent.ini & echo $! >/opt/stack/status/stack/q-meta.pid; fg || echo "q-meta failed to start" | tee "/opt/stack/status/stack/q-meta.failure"
+  254  python /usr/bin/neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/l3_agent.ini & echo $! >/opt/stack/status/stack/q-l3.pid; fg || echo "q-l3 failed to start" | tee "/opt/stack/status/stack/q-l3.failure"
+  255  python /usr/bin/neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/dhcp_agent.ini & echo $! >/opt/stack/status/stack/q-dhcp.pid; fg || echo "q-dhcp failed to start" | tee "/opt/stack/status/stack/q-dhcp.failure"
+  256  sudo tail -f /var/log/httpd/horizon_error.log & echo $! >/opt/stack/status/stack/horizon.pid; fg || echo "horizon failed to start" | tee "/opt/stack/status/stack/horizon.failure"
+  257  python /usr/bin/neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-svc.pid; fg || echo "q-svc failed to start" | tee "/opt/stack/status/stack/q-svc.failure"
+  258  python /usr/bin/neutron-openvswitch-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-agt.pid; fg || echo "q-agt failed to start" | tee "/opt/stack/status/stack/q-agt.failure"
+  259  ls
+  260  ls -la
+  261  clear
+  262  ls
+  263  cd devstack/
+  264  ls
+  265  vi local.conf 
+  266  ifconfig
+  267  cd ~
+  268  clear
+  269  ls
+  270  ifconfig
+  271  ls
+  272  cd devstack/
+  273  ls
+  274  cd ..
+  275  ls
+  276  mkdir data
+  277  mv local.conf data/
+  278  mv onps_config data/
+  279  mv patches/ data/
+  280  ls
+  281  mv prepare_stack.sh data/
+  282  mv refresh/ data/
+  283  mv rootfs_fc21_openstack_controller.tar.bz2 data
+  284  ls
+  285  vi config
+  286  ls
+  287  vi update_deployment_config.sh
+  288  cat config 
+  289  vi update_deployment_config.sh
+  290  chmod 777 update_deployment_config.sh 
+  291  ls
+  292  vi controller.sh
+  293  chmod 777 controller.sh 
+  294  ls
+  295  cp devstack/local.conf .
+  296  ls
+  297  cp local.conf local.conf.bk
+  298  vi local.conf
+  299  ls
+  300  cp local.conf devstack/
+  301  ./update_deployment_config.sh 
+  302  vi devstack/local.conf 
+  303  ls
+  304  cp local.conf.bk local.conf
+  305  ls
+  306  vi local.conf
+  307  ls
+  308  vi update_deployment_config.sh 
+  309  ls
+  310  ./update_deployment_config.sh 
+  311  vi devstack/local.conf 
+  312  clear
+  313  ls
+  314  rm -rf local.conf.bk 
+  315  ls
+  316  ./controller.sh 
+  317  ls
+  318  cat controller.sh 
+  319  /opt/stack/heat/bin/heat-engine --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-eng.pid; fg || echo "h-eng failed to start" | tee "/opt/stack/status/stack/h-eng.failure"
+  320  /opt/stack/heat/bin/heat-api --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api.pid; fg || echo "h-api failed to start" | tee "/opt/stack/status/stack/h-api.failure"
+  321  /opt/stack/heat/bin/heat-api-cfn --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cfn.pid; fg || echo "h-api-cfn failed to start" | tee "/opt/stack/status/stack/h-api-cfn.failure"
+  322  /opt/stack/heat/bin/heat-api-cloudwatch --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cw.pid; fg || echo "h-api-cw failed to start" | tee "/opt/stack/status/stack/h-api-cw.failure"
+  323  /usr/bin/nova-api & echo $! >/opt/stack/status/stack/n-api.pid; fg || echo "n-api failed to start" | tee "/opt/stack/status/stack/n-api.failure"
+  324  /usr/bin/nova-cert --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-crt.pid; fg || echo "n-crt failed to start" | tee "/opt/stack/status/stack/n-crt.failure"
+  325  /usr/bin/nova-scheduler --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-sch.pid; fg || echo "n-sch failed to start" | tee "/opt/stack/status/stack/n-sch.failure"
+  326  /usr/bin/nova-novncproxy --config-file /etc/nova/nova.conf --web /opt/stack/noVNC & echo $! >/opt/stack/status/stack/n-novnc.pid; fg || echo "n-novnc failed to start" | tee "/opt/stack/status/stack/n-novnc.failure"
+  327  /usr/bin/nova-xvpvncproxy --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-xvnc.pid; fg || echo "n-xvnc failed to start" | tee "/opt/stack/status/stack/n-xvnc.failure"
+  328  /usr/bin/nova-consoleauth --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cauth.pid; fg || echo "n-cauth failed to start" | tee "/opt/stack/status/stack/n-cauth.failure"
+  329  /usr/bin/nova-conductor --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cond.pid; fg || echo "n-cond failed to start" | tee "/opt/stack/status/stack/n-cond.failure"
+  330  /usr/bin/nova-objectstore --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-obj.pid; fg || echo "n-obj failed to start" | tee "/opt/stack/status/stack/n-obj.failure"
+  331  /usr/bin/glance-api --config-file=/etc/glance/glance-api.conf & echo $! >/opt/stack/status/stack/g-api.pid; fg || echo "g-api failed to start" | tee "/opt/stack/status/stack/g-api.failure"
+  332  /usr/bin/glance-registry --config-file=/etc/glance/glance-registry.conf & echo $! >/opt/stack/status/stack/g-reg.pid; fg || echo "g-reg failed to start" | tee "/opt/stack/status/stack/g-reg.failure"
+  333  sudo tail -f /var/log/httpd/keystone.log & echo $! >/opt/stack/status/stack/key.pid; fg || echo "key failed to start" | tee "/opt/stack/status/stack/key.failure"
+  334  /opt/stack/cinder/bin/cinder-api --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-api.pid; fg || echo "c-api failed to start" | tee "/opt/stack/status/stack/c-api.failure"
+  335  /opt/stack/cinder/bin/cinder-scheduler --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-sch.pid; fg || echo "c-sch failed to start" | tee "/opt/stack/status/stack/c-sch.failure"
+  336  /opt/stack/cinder/bin/cinder-volume --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-vol.pid; fg || echo "c-vol failed to start" | tee "/opt/stack/status/stack/c-vol.failure"
+  337  python /usr/bin/neutron-metadata-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/metadata_agent.ini & echo $! >/opt/stack/status/stack/q-meta.pid; fg || echo "q-meta failed to start" | tee "/opt/stack/status/stack/q-meta.failure"
+  338  python /usr/bin/neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/l3_agent.ini & echo $! >/opt/stack/status/stack/q-l3.pid; fg || echo "q-l3 failed to start" | tee "/opt/stack/status/stack/q-l3.failure"
+  339  python /usr/bin/neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/dhcp_agent.ini & echo $! >/opt/stack/status/stack/q-dhcp.pid; fg || echo "q-dhcp failed to start" | tee "/opt/stack/status/stack/q-dhcp.failure"
+  340  python /usr/bin/neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-svc.pid; fg || echo "q-svc failed to start" | tee "/opt/stack/status/stack/q-svc.failure"
+  341  sudo tail -f /var/log/httpd/horizon_error.log & echo $! >/opt/stack/status/stack/horizon.pid; fg || echo "horizon failed to start" | tee "/opt/stack/status/stack/horizon.failure"
+  342  sudo tail -f /var/log/httpd/keystone_access.log & echo $! >/opt/stack/status/stack/key-access.pid; fg || echo "key-access failed to start" | tee "/opt/stack/status/stack/key-access.failure"
+  343  ls
+  344  ls
+  345  cd devstack/
+  346  ./unstack.sh 
+  347  cd ..
+  348  ls
+  349  ./controller.sh 
+  350  cat devstack/local.conf 
+  351  iptables -L
+  352  sudo iptables -L
+  353  ifconfig
+  354  ping 192.168.10.113
+  355  clear
+  356  sudo tcpdump -nni eth0 port 5900
+  357  sudo iptables -F
+  358  clear
+  359  sudo tcpdump -nni eth0 port 5900
+  360  ls
+  361  rm -rf data/
+  362  ls
+  363  vi README
+  364  cd /var/cache/
+  365  ls
+  366  du -sh ./
+  367  cd /var/log/
+  368  ls
+  369  du -sh ./
+  370  sudo du -sh ./
+  371  cd openvswitch/
+  372  ls
+  373  cd ..
+  374  sud su
+  375  sudo su
+  376  cd /home/stack/devstack/
+  377  ./unstack.sh 
+  378  cd /var/lo
+  379  cd /var/log
+  380  sud su
+  381  sudo su
+  382  ls
+  383  ls -la
+  384  scp -P 6222 rootfs_fc21_openstack_controller.tar.bz2 lap@173.164.244.84:/home/lap
+  385  ssh root@192.168.10.113
+  386  cd /boot/
+  387  ls
+  388  mkdir boot_3.17.8-300.fc21.x86_64
+  389  sudo mkdir boot_3.17.8-300.fc21.x86_64
+  390  sudo su
+  391  ls
+  392  ./controller.sh 
+  393  ls
+  394  sscp controller.sh config README update_deployment_config.sh local.conf stack@192.168.10.114
+  395  scp controller.sh config README update_deployment_config.sh local.conf stack@192.168.10.114
+  396  scp controller.sh config README update_deployment_config.sh local.conf stack@192.168.10.114:/home/stack
+  397  vi controller.sh 
+  398  sudo su
+  399  ./84
+  400  exit
+  401  sudo su
+  402  ls
+  403  sudo su
+  404  ls
+  405  vi con
+  406  vi config 
+  407  ./controller.sh 
+  408  cd /usr/lib/python2.7/site-packages
+  409  sudo rm -rf pip*
+  410  cd -
+  411  ./update_deployment_config.sh 
+  412  ./controller.sh 
+  413  ls
+  414  curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+  415  sudo python get-pip.py
+  416  sudo rm -rf /usr/lib/python2.7/site-packages/pip*
+  417  sudo python get-pip.py
+  418  ./controller.sh 
+  419  vi /opt/stack/requirements/global-requirements.txt 
+  420  ls
+  421  yum -y install git python-pip python-pbr
+  422  sudo yum -y install git python-pip python-pbr
+  423  ./controller.sh 
+  424  which pip
+  425  yum clean all
+  426  sudo yum clean all
+  427  curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+  428  sudo python get-pip.py
+  429  ./controller.sh 
+  430  sudo rm -rf /usr/lib/python2.7/site-packages/pip*
+  431  ./controller.sh 
+  432  which pip
+  433  pip --version
+  434  sudo vi /opt/stack/requirements/global-requirements.txt 
+  435  ./controller.sh 
+  436  which pip
+  437  pip -version
+  438  pip --version
+  439  sudo rm -rf /usr/lib/python2.7/site-packages/pip*
+  440  ./controller.sh 
+  441  sudo vi /opt/stack/requirements/global-requirements.txt 
+  442  ./controller.sh 
+  443  vi /usr/lib/python2.7/site-packages/pip/req/req_install.py
+  444  sudo vi /usr/lib/python2.7/site-packages/pip/req/req_install.py
+  445  ./controller.sh 
+  446  sudo vi /opt/stack/requirements/update.py 
+  447  ./controller.sh 
+  448  sudo vi /opt/stack/requirements/update.py 
+  449  ./controller.sh 
+  450  sudo vi /opt/stack/requirements/global-requirements.txt 
+  451  ./controller.sh 
+  452  sudo rm -rf /usr/lib/python2.7/site-packages/pbr*
+  453  ./controller.sh 
+  454  ls
+  455  cd 
+  456  exit
+  457  clear
+  458  ls
+  459  rm -rf get-pip.py 
+  460  cat README 
+  461  vi README 
+  462  clear
+  463  /opt/stack/heat/bin/heat-api-cloudwatch --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cw.pid; fg || echo "h-api-cw failed to start" | tee "/opt/stack/status/stack/h-api-cw.failure"
+  464  /opt/stack/cinder/bin/cinder-volume --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-vol.pid; fg || echo "c-vol failed to start" | tee "/opt/stack/status/stack/c-vol.failure"
+  465  /usr/bin/nova-cert --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-crt.pid; fg || echo "n-crt failed to start" | tee "/opt/stack/status/stack/n-crt.failure"
+  466  /opt/stack/cinder/bin/cinder-scheduler --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-sch.pid; fg || echo "c-sch failed to start" | tee "/opt/stack/status/stack/c-sch.failure"
+  467  /opt/stack/heat/bin/heat-api-cfn --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api-cfn.pid; fg || echo "h-api-cfn failed to start" | tee "/opt/stack/status/stack/h-api-cfn.failure"
+  468  /opt/stack/heat/bin/heat-api --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-api.pid; fg || echo "h-api failed to start" | tee "/opt/stack/status/stack/h-api.failure"
+  469  /opt/stack/heat/bin/heat-engine --config-file=/etc/heat/heat.conf & echo $! >/opt/stack/status/stack/h-eng.pid; fg || echo "h-eng failed to start" | tee "/opt/stack/status/stack/h-eng.failure"
+  470  /usr/bin/nova-conductor --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cond.pid; fg || echo "n-cond failed to start" | tee "/opt/stack/status/stack/n-cond.failure"
+  471  /opt/stack/cinder/bin/cinder-api --config-file /etc/cinder/cinder.conf & echo $! >/opt/stack/status/stack/c-api.pid; fg || echo "c-api failed to start" | tee "/opt/stack/status/stack/c-api.failure"
+  472  python /usr/bin/neutron-metadata-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/metadata_agent.ini & echo $! >/opt/stack/status/stack/q-meta.pid; fg || echo "q-meta failed to start" | tee "/opt/stack/status/stack/q-meta.failure"
+  473  /usr/bin/nova-novncproxy --config-file /etc/nova/nova.conf --web /opt/stack/noVNC & echo $! >/opt/stack/status/stack/n-novnc.pid; fg || echo "n-novnc failed to start" | tee "/opt/stack/status/stack/n-novnc.failure"
+  474  /usr/bin/nova-consoleauth --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-cauth.pid; fg || echo "n-cauth failed to start" | tee "/opt/stack/status/stack/n-cauth.failure"
+  475  /usr/bin/nova-objectstore --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-obj.pid; fg || echo "n-obj failed to start" | tee "/opt/stack/status/stack/n-obj.failure"
+  476  /usr/bin/nova-xvpvncproxy --config-file /etc/nova/nova.conf & echo $! >/opt/stack/status/stack/n-xvnc.pid; fg || echo "n-xvnc failed to start" | tee "/opt/stack/status/stack/n-xvnc.failure"
+  477  python /usr/bin/neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/l3_agent.ini & echo $! >/opt/stack/status/stack/q-l3.pid; fg || echo "q-l3 failed to start" | tee "/opt/stack/status/stack/q-l3.failure"
+  478  python /usr/bin/neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file=/etc/neutron/dhcp_agent.ini & echo $! >/opt/stack/status/stack/q-dhcp.pid; fg || echo "q-dhcp failed to start" | tee "/opt/stack/status/stack/q-dhcp.failure"
+  479  python /usr/bin/neutron-openvswitch-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini & echo $! >/opt/stack/status/stack/q-agt.pid; fg || echo "q-agt failed to start" | tee "/opt/stack/status/stack/q-agt.failure"
+  480  ifconfig
+  481  exit
+  482  ifconfig
+  483  uname -a
+  484  exit
+  485  ls
+  486  vi README 
+  487  ls
+  488  vi config 
+  489  ls
+  490  pwd
+  491  ls
+  492  history
+  493  exit
+  494  ls
+  495  history 
+  496  cat README 
+  497  ifconfig
+  498  history > 1

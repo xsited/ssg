@@ -1,0 +1,93 @@
+[root@wp-01 ~]# history
+    1  yum update -y
+    2  reboot
+    3  du -sh ./
+    4  find /var/log -type f -exec /bin/cp /dev/null {} \;
+    5  du -sh ./
+    6  cd -
+    7  ls
+    8  find /var/log -type f -exec /bin/cp /dev/null {} \;
+    9  du -sh ./
+   10  cd /home/stack/
+   11  exit
+   12  find /var/log -type f -exec /bin/cp /dev/null {} \;
+   13  cd /var/log/
+   14  du -sh ./
+   15  find /var/log -type f -exec /bin/cp /dev/null {} \;
+   16  cd /mnt/pxe/
+   17  ls
+   18  cd var/log/
+   19  ls
+   20  du -sh ./
+   21  find  .  -type f -exec /bin/cp /dev/null {} \;
+   22  cd ..
+   23  ls
+   24  cd ..
+   25  ls
+   26  cd home/
+   27  ls
+   28  cd ..
+   29  ls
+   30  exit
+   31  yum install -y dracut dracut-network
+   32  vi /etc/dracut.conf
+   33  mkdir /mnt/pxe
+   34  mount -t nfs 192.168.10.1:/nfsroot/.PXE2_0a70a5fd9a4f8f31fb5354a6c8a00e /mnt/pxe
+   35  mount -t nfs 192.168.10.1:/nfsroot/.PXE2_0a70a5fd9a4f8f31fb5354a6c8a00e6 /mnt/pxe
+   36  mount -t nfs 192.168.10.1:/nfsroot/.PXE2_0a70a5fd9a4f8f31fb5354a6c8a00e65 /mnt/pxe
+   37  ls
+   38  scp -P 6222 /boot/vmlinuz-3.17.8-300.fc21.x86_64 lap@173.164.244.84:/home/lap/kerel-compute
+   39  dracut /tmp/myinitrd-yourcustomname.img  3.17.8-300.fc21.x86_64
+   40  scp -P /tmp/myinitrd-yourcustomname.img lap@173.164.244.84:/home/lap/initdr-compute
+   41  scp -P 6222 /tmp/myinitrd-yourcustomname.img lap@173.164.244.84:/home/lap/initdr-compute
+   42  rsync -a --numeric-ids --exclude='/proc/*' --exclude='/sys/*' /mnt/pxe
+   43  rsync -a --numeric-ids --exclude='/proc/*' --exclude='/sys/*' /mnt/pxe
+   44  dracut /tmp/myinitrd-yourcustomnam2e.img  123
+   45  cd /mnt/pxe/home/
+   46  ls
+   47  cd ..
+   48  ls
+   49  cd opt/
+   50  ls
+   51  cd ..
+   52  ls
+   53  pwd
+   54  cd ls
+   55  cd /opt/
+   56  ls
+   57  cd stack/
+   58  ls
+   59  cd ..
+   60  ls
+   61  pwd
+   62  cd /mnt/pxe/
+   63  ls
+   64  cd opt/
+   65  ls
+   66  rsync -azv /home/ /mnt/pxe/home/
+   67  rm -rf /home/stack/rootfs_fc21_openstack_compute.tar.bz2
+   68  rsync -azv /home/ /mnt/pxe/home/
+   69  rsync -azv /opt  /mnt/pxe/opt
+   70  sudo umount /mnt/pxe 
+   71  reboot
+   72  #SYNC 00
+   73  NFSROOT=.PXE-WP00_301edef7fbfd7e38f7155989c3d92396
+   74  #SYNC 01
+   75  NFSROOT=.PXE-WP01_0a70a5fd9a4f8f31fb5354a6c8a00e65 
+   76  find /var/log -type f -exec /bin/cp /dev/null {} \;
+   77  find /var/log -type f -exec /bin/cp /dev/null {} \;
+   78  rm -rf /mnt/pxe
+   79  mkdir /mnt/pxe
+   80  mount -t nfs 192.168.10.1:/nfsroot/$NFSROOT /mnt/pxe
+   81  rsync -arv  --numeric-ids / --exclude='/proc/*' --exclude='/sys/*' --exclude='/boot/*' --exclude='/mnt/*' --exclude='/tmp/*' --delete / /mnt/pxe
+   82  exit
+   83  apt-get update
+   84  exit
+   85  ls
+   86  pwd
+   87  cd ~stack
+   88  ls
+   89  cat config 
+   90  exit
+   91  history
+
