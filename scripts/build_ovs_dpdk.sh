@@ -28,6 +28,8 @@ cat << 'EOF' > config.1.8.0.patch
  #
 EOF
 
+# dpdk 2.0.0
+
 cat << 'EOF' > config.2.0.0.patch
 --- config/common_linuxapp.orig	2015-05-18 17:39:44.488021385 -0700
 +++ config/common_linuxapp	2015-05-18 17:42:20.496021531 -0700
@@ -51,21 +53,101 @@ cat << 'EOF' > config.2.0.0.patch
  
 EOF
 
+# helper system prep
+
 cat << 'EOF' > rc.local.include
-echo 1024 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
-mkdir /mnt/huge
-mount -t hugetlbfs nodev /mnt/huge
+
+dmesg | grep -e DMAR -e IOMMU
+grep -i huge /proc/meminfo
+
+mount -t hugetlbfs -o pagesize=1G none /dev/hugepages
+
+# echo 1024 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+# mkdir /mnt/huge
+# mount -t hugetlbfs nodev /mnt/huge
 
 modprobe uio 
-insmod x86_64-ivshmem-linuxapp-gcc/kmod/igb_uio.ko
+
+# DPDK_HOME=
+# insmod $(DPDK_HOME)/lib/librte_vhost/eventfd_link/eventfd_link.ko
+# insmod $(DPDK_HOME)/x86_64-ivshmem-linuxapp-gcc/kmod/igb_uio.ko
 
 # NOTE: VFIO needs to be supported in the kernel and the BIOS. 
 
-#modprobe vfio-pci
-#/usr/bin/chmod a+x /dev/vfio
-#/usr/bin/chmod 0666 /dev/vfio/*
+# modprobe vfio-pci
+# chmod a+x /dev/vfio
+# chmod 0666 /dev/vfio/*
+
+# modprobe uio
+# DPDK_HOME=
+# insmod $(DPDK_HOME)/lib/librte_vhost/eventfd_link/eventfd_link.ko
+# insmod $(DPDK_HOME)/x86_64-ivshmem-linuxapp-gcc/kmod/igb_uio.ko
+# mount -t hugetlbfs -o pagesize=1G none /dev/hugepages
+# killall ovs-vswitchd
+# ovs-vswitchd --dpdk -c 0x0FF8 -n 4 --socket-mem 1024,0 -- unix:/var/run/openvswitch/db.sock -vconsole:emer -vsyslog:err -vfile:info --mlockall --no-chdir --log-file=/var/log/openvswitch/ovs-vswitchd.log --pidfile=/var/run/openvswitch/ovs-vswitchd.pid --detach --monitor
 
 EOF
+
+# ovs-ctl add DPDK_OPTS
+cat << 'EOF' >  ovs-ctl-add-dpdk.patch
+--- ../ovs.orig/debian/openvswitch-switch.template	2015-06-07 22:30:21.506684451 -0700
++++ ./debian/openvswitch-switch.template	2015-06-07 22:24:45.198690289 -0700
+@@ -6,3 +6,7 @@
+ # OVS_CTL_OPTS: Extra options to pass to ovs-ctl.  This is, for example,
+ # a suitable place to specify --ovs-vswitchd-wrapper=valgrind.
+ # OVS_CTL_OPTS=
++
++# DPDK_OPTS: Use this option to enable DPDK with initial options.
++# DPDK_OPTS="-c 0x0FF8 -n 4 --socket-mem 1024,0"
++
+--- ../ovs.orig/rhel/etc_init.d_openvswitch	2015-06-07 22:30:21.570684450 -0700
++++ ./rhel/etc_init.d_openvswitch	2015-06-07 22:24:45.202690288 -0700
+@@ -32,6 +32,9 @@
+ 
+ start () {
+     set ovs_ctl ${1-start}
++    if test X"$DPDK_OPTS" != X; then
++	set "$@" --dpdk "$DPDK_OPTS" --
++    fi
+     set "$@" --system-id=random
+     if test X"$FORCE_COREFILES" != X; then
+ 	set "$@" --force-corefiles="$FORCE_COREFILES"
+--- ../ovs.orig/rhel/usr_share_openvswitch_scripts_sysconfig.template	2015-06-07 22:30:21.570684450 -0700
++++ ./rhel/usr_share_openvswitch_scripts_sysconfig.template	2015-06-07 22:24:45.202690288 -0700
+@@ -22,3 +22,6 @@
+ # OVS_CTL_OPTS: Extra options to pass to ovs-ctl.  This is, for example,
+ # a suitable place to specify --ovs-vswitchd-wrapper=valgrind.
+ # OVS_CTL_OPTS=
++
++# DPDK_OPTS: Use this option to enable DPDK with initial options.
++# DPDK_OPTS="-c 0x0FF8 -n 4 --socket-mem 1024,0 --"
+--- ../ovs.orig/utilities/ovs-ctl.in	2015-06-07 22:30:21.586684450 -0700
++++ ./utilities/ovs-ctl.in	2015-06-07 22:28:34.622686306 -0700
+@@ -253,7 +253,12 @@
+         fi
+ 
+ 	    # Start ovs-vswitchd.
+-	    set ovs-vswitchd unix:"$DB_SOCK"
++            set ovs-vswitchd
++            # DPDK options need to be first inline
++            if test X"$DPDK_OPTS" != X; then
++                set "$@"  --dpdk "$DPDK_OPTS" --
++            fi
++            set "$@" unix:"$DB_SOCK"
+ 	    set "$@" -vconsole:emer -vsyslog:err -vfile:info
+ 	    if test X"$MLOCKALL" != Xno; then
+ 	        set "$@" --mlockall
+@@ -545,6 +550,7 @@
+     DB_SOCK=$rundir/db.sock
+     DB_SCHEMA=$datadir/vswitch.ovsschema
+     EXTRA_DBS=
++    DPDK_OPTS=
+ 
+     PROTOCOL=gre
+     DPORT=
+EOF
+
+# patch vhost-user 
 
 cat << 'EOF' > dpdk-vhost-user-2.patch
 diff --git a/INSTALL.DPDK.md b/INSTALL.DPDK.md
@@ -670,15 +752,17 @@ make install T=x86_64-${feature}-linuxapp-gcc
 cd lib/librte_vhost/eventfd_link/
 make
 cd ${home}/src/ovs
+
 git checkout 7762f7c39a8f5f115427b598d9e768f9336af466
 
-pwd
+#pwd
 patch -p1 <../../dpdk-vhost-user-2.patch
+patch -p1 <../../ovs-ctl-add-dpdk.patch
 ./boot.sh
-./configure --prefix=/usr --localstatedir=/var --with-dpdk=../dpdk-${dversion}/x86_64-${feature}-linuxapp-gcc/
+./configure --prefix=/usr  --sysconfdir=/etc --localstatedir=/var --with-dpdk=../dpdk-${dversion}/x86_64-${feature}-linuxapp-gcc/ --enable-ssl
 
-# make install
+make
 #                or
-dpkg-buildpackage -b
+# dpkg-buildpackage -b
 # mv ../../*.deb ../../ovs-debian
 
