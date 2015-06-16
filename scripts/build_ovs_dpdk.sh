@@ -4,6 +4,7 @@ feature="native"
 feature="ivshmem"
 dversion="1.8.0"
 dversion="2.0.0"
+builddpdk=true
 
 cat << 'EOF' > config.1.8.0.patch
 --- config/common_linuxapp	2014-12-19 15:38:39.000000000 -0800
@@ -754,11 +755,15 @@ index a1b33da..48651df 100644
 EOF
 
 home=`pwd`
-
 mkdir -p src
 cd src
+
+if $builddpdk; then
+
 wget http://dpdk.org/browse/dpdk/snapshot/dpdk-${dversion}.tar.gz
 tar xvzpf dpdk-${dversion}.tar.gz
+
+fi
 
 
 wget -q http://openvswitch.org/releases/openvswitch-2.4.0.tar.gz
@@ -773,6 +778,8 @@ if [ $? -ne 0 ]
 	ovs_path="openvswitch-2.4.0.tar.gz"
 fi
 
+if $builddpdk; then
+
 cd dpdk-${dversion}/
 patch -p0 <../../config.${dversion}.patch
 
@@ -781,11 +788,18 @@ make install T=x86_64-${feature}-linuxapp-gcc
 cd lib/librte_vhost/eventfd_link/
 make
 
+fi
+
 cd ${home}/src/${ovs_path}
 
-git checkout 7762f7c39a8f5f115427b598d9e768f9336af466
+# works git checkout 7762f7c39a8f5f115427b598d9e768f9336af466
+# https://github.com/openvswitch/ovs/commit/a0cb2d66f57ac73a56602be3abb9f69cb8ff95c9
+# works git checkout a0cb2d66f57ac73a56602be3abb9f69cb8ff95c9
 
-patch -p1 <../../dpdk-vhost-user-2.patch
+# https://github.com/openvswitch/ovs/commit/4c0e587ce4408ff8181f7b094a3ef13ad273f20b
+# git checkout 4c0e587ce4408ff8181f7b094a3ef13ad273f20b
+
+#patch -p1 <../../dpdk-vhost-user-2.patch
 patch -p1 <../../ovs-ctl-add-dpdk.patch
 
 
