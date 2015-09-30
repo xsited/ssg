@@ -758,6 +758,11 @@ home=`pwd`
 mkdir -p src
 cd src
 
+
+
+echo "sudo passwd for checking that some dependancies are installed"
+sudo apt-get install -fy fuse libfuse-dev libssl-dev
+
 if $builddpdk; then
 
 wget http://dpdk.org/browse/dpdk/snapshot/dpdk-${dversion}.tar.gz
@@ -775,7 +780,7 @@ if [ $? -ne 0 ]
   else 
 	echo "OK"
 	tar xzpf openvswitch-2.4.0.tar.gz
-	ovs_path="openvswitch-2.4.0.tar.gz"
+	ovs_path="openvswitch-2.4.0"
 fi
 
 if $builddpdk; then
